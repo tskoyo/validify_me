@@ -5,45 +5,69 @@ module ValidifyMe
     end
 
     module ClassMethods
-      def validates_presence_of(*attributes)
-        attributes.each do |attribute|
-          define_method("#{attribute}_presence_validation") do
-            value = send(attribute)
-            if value.empty?
-              errors.add(attribute, 'must be present')
-            end
-          end
+      def params(&block)
+        context = Context.new
 
-          validate "#{attribute}_presence_validation"
-        end
+        return {} unless block_given?
+
+        context.instance_eval(&block)
       end
     end
 
-    def valid?
-      errors.empty?
-    end
+    class Context
+      attr_reader :params
 
-    def errors
-      @errors ||= Errors.new
-    end
-
-    class Errors
       def initialize
-        @errors = {}
+        @params = []
       end
 
-      def add(attribute, message)
-        @errors[attribute] ||= []
-        @errors[attribute] << message
-      end
-
-      def empty?
-        @errors.empty?
-      end
-
-      def to_hash
-        @errors
+      def optional(name)
+        parameter = ParameterDefinition.new(name, {})
+        @params << parameter
+        parameter
       end
     end
+
+    class ParameterDefinition
+      attr_reader :name, :constraints
+
+      def initialize(name, constraints)
+        @name = name
+        @constraints = constraints
+      end
+
+      def value(type, **options)
+        constraints[:type] = type
+        constraints.merge!(options)
+      end
+    end
+
+    # ---------------- Commented for now ----------------
+    # def valid?
+    #   errors.empty?
+    # end
+
+    # def errors
+    #   @errors ||= Errors.new
+    # end
+
+    # class Errors
+    #   def initialize
+    #     @errors = {}
+    #   end
+
+    #   def add(attribute, message)
+    #     @errors[attribute] ||= []
+    #     @errors[attribute] << message
+    #   end
+
+    #   def empty?
+    #     @errors.empty?
+    #   end
+
+    #   def to_hash
+    #     @errors
+    #   end
+    # end
   end
 end

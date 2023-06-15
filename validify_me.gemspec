@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative "lib/validify_me/version"
-require_relative "lib/validify_me/data_validator"
 
 Gem::Specification.new do |spec|
   spec.name = "validify_me"
