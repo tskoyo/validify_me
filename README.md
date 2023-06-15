@@ -29,25 +29,28 @@ Here's a simple example demonstrating how to use ValidifyMe for data validation 
 require 'validify_me'
 
 class Person
-  include ValidifyMe::Validatable
-  include ValidifyMe::Serializable
-
   attr_accessor :name, :age
-
-  validates :name, presence: true
-  validates :age, numericality: { greater_than: 0 }
 
   serialize_as :json
 end
 
-person = Person.new
-person.name = 'John Doe'
-person.age = 30
+class ShowPerson
+  include ValidifyMe::DataValidator
+  include ValidifyMe::Serializer
 
-if person.valid?
-  serialized_data = person.serialize
-  # Perform further operations with the serialized data
-else
-  puts "Invalid data: #{person.errors}"
+  params do
+    required(:name).value(:string)
+    required(:age).value(:integer, gt: 0, lt: 100)
+  end
+
+  def call
+    return { errors: error_messages, status: 422 }.to_json unless valid_params?
+
+    users = rom.relations[:users]
+      .select(:name, :age)
+      .to_a
+
+    { result: users }
+  end
 end
 ```
