@@ -11,6 +11,7 @@ module ValidifyMe
         return {} unless block_given?
 
         context.instance_eval(&block)
+        context.params
       end
     end
 
@@ -22,6 +23,12 @@ module ValidifyMe
       end
 
       def optional(name)
+        parameter = ParameterDefinition.new(name, {})
+        @params << parameter
+        parameter
+      end
+
+      def required(name)
         parameter = ParameterDefinition.new(name, {})
         @params << parameter
         parameter
