@@ -43,11 +43,6 @@ module ValidifyMe
         @params = []
       end
 
-      def validate(params)
-        # Logic to validate the params against the defined rules
-        # ...
-      end
-
       def required(name)
         parameter = ParameterDefinition.new(name, required: true)
         @params << parameter
@@ -82,33 +77,5 @@ module ValidifyMe
         !required?
       end
     end
-
-    # ---------------- Commented for now ----------------
-    # def valid?
-    #   errors.empty?
-    # end
-
-    # def errors
-    #   @errors ||= Errors.new
-    # end
-
-    # class Errors
-    #   def initialize
-    #     @errors = {}
-    #   end
-
-    #   def add(attribute, message)
-    #     @errors[attribute] ||= []
-    #     @errors[attribute] << message
-    #   end
-
-    #   def empty?
-    #     @errors.empty?
-    #   end
-
-    #   def to_hash
-    #     @errors
-    #   end
-    # end
   end
 end
