@@ -1,35 +1,61 @@
+require 'validify_me/errors/parameter_validation_error'
+
 module ValidifyMe
   module DataValidator
     def self.included(base)
       base.extend(ClassMethods)
+      base.include(InstanceMethods)
     end
 
     module ClassMethods
+      def validator
+        @validator ||= Validator.new
+      end
+
       def params(&block)
-        context = Context.new
+        validator.instance_eval(&block) if block_given?
 
-        return {} unless block_given?
+        validator.params
+      end      
+    end
 
-        context.instance_eval(&block)
-        context.params
+    module InstanceMethods
+      def validate(params)
+        validate_params!(params)
+      end
+
+      private
+
+      def validate_params!(params)
+        self.class.validator.params.each do |param|
+          next if param.optional? && !params.key?(param.name)
+          next if params[param.name]
+
+          raise Errors::ParameterValidationError.new(param.name)
+        end
       end
     end
 
-    class Context
+    class Validator
       attr_reader :params
 
       def initialize
         @params = []
       end
 
-      def optional(name)
-        parameter = ParameterDefinition.new(name, {})
+      def validate(params)
+        # Logic to validate the params against the defined rules
+        # ...
+      end
+
+      def required(name)
+        parameter = ParameterDefinition.new(name, required: true)
         @params << parameter
         parameter
       end
 
-      def required(name)
-        parameter = ParameterDefinition.new(name, {})
+      def optional(name)
+        parameter = ParameterDefinition.new(name, required: false)
         @params << parameter
         parameter
       end
@@ -46,6 +72,14 @@ module ValidifyMe
       def value(type, **options)
         constraints[:type] = type
         constraints.merge!(options)
+      end
+
+      def required?
+        @constraints[:required]
+      end
+
+      def optional?
+        !required?
       end
     end
 
