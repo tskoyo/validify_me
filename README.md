@@ -31,6 +31,8 @@ Here's a simple example demonstrating how to use ValidifyMe for data validation 
 require 'validify_me'
 
 class Person
+  include ValidifyMe::Serializer
+
   attr_accessor :name, :age
 
   serialize_as :json
@@ -38,7 +40,6 @@ end
 
 class ShowPerson
   include ValidifyMe::DataValidator
-  include ValidifyMe::Serializer
 
   params do
     required(:name).value(:string)
