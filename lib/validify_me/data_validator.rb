@@ -16,7 +16,7 @@ module ValidifyMe
         validator.instance_eval(&block) if block_given?
 
         validator.params
-      end      
+      end
     end
 
     module InstanceMethods
