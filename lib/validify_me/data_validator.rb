@@ -1,4 +1,4 @@
-require 'validify_me/errors/parameter_validation_error'
+require 'validify_me/errors/empty_parameter_error'
 
 module ValidifyMe
   module DataValidator
@@ -31,7 +31,7 @@ module ValidifyMe
           next if param.optional? && !params.key?(param.name)
           next if params[param.name]
 
-          raise Errors::ParameterValidationError.new(param.name)
+          raise Errors::EmptyParameterError.new(param.name)
         end
       end
     end

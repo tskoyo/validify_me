@@ -1,5 +1,5 @@
 require 'validify_me/data_validator'
-require 'validify_me/errors/parameter_validation_error'
+require 'validify_me/errors/empty_parameter_error'
 require 'pry'
 
 RSpec.describe ValidifyMe::DataValidator do
@@ -24,11 +24,11 @@ RSpec.describe ValidifyMe::DataValidator do
       )
     end
 
-    context 'we pass an empty parameter' do
+    context 'when an empty parameter is passed' do
       it 'should raise ParameterValidationError' do
         person = Person.new
 
-        expect { person.validate(name: 'John') }.to raise_error(ValidifyMe::Errors::ParameterValidationError)
+        expect { person.validate(name: 'John') }.to raise_error(ValidifyMe::Errors::EmptyParameterError)
       end
     end
   end

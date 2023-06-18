@@ -1,6 +1,6 @@
 module ValidifyMe
   module Errors
-    class ParameterValidationError < StandardError
+    class EmptyParameterError < StandardError
       attr_reader :param_name
 
       def initialize(param_name)
