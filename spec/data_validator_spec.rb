@@ -1,6 +1,8 @@
 require 'validify_me/data_validator'
 require 'validify_me/errors/empty_parameter_error'
-require 'pry'
+require 'validify_me/errors/constraint_parameter_error'
+
+require 'byebug'
 
 RSpec.describe ValidifyMe::DataValidator do
   class Person
@@ -29,6 +31,14 @@ RSpec.describe ValidifyMe::DataValidator do
         person = Person.new
 
         expect { person.validate(name: 'John') }.to raise_error(ValidifyMe::Errors::EmptyParameterError)
+      end
+    end
+
+    context 'when wrong value for parameter is passed' do
+      person = Person.new
+      
+      it 'should raise ConstraintParameterError' do
+        expect { person.validate(age: 101) }.to raise_error(ValidifyMe::Errors::ConstraintParameterError)
       end
     end
   end
