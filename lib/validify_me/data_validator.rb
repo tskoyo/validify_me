@@ -1,4 +1,5 @@
 require 'validify_me/errors/empty_parameter_error'
+require 'validify_me/errors/constraint_parameter_error'
 
 module ValidifyMe
   module DataValidator
@@ -21,17 +22,25 @@ module ValidifyMe
 
     module InstanceMethods
       def validate(params)
-        validate_params!(params)
+        self.class.validator.params.each do |param|
+          next if param.optional? && !params.key?(param.name) && param.data[:constraints].empty?
+
+          handle_constraints(param, params[param.name])
+
+          raise Errors::EmptyParameterError.new(param.name)
+        end
       end
 
       private
 
-      def validate_params!(params)
-        self.class.validator.params.each do |param|
-          next if param.optional? && !params.key?(param.name)
-          next if params[param.name]
-
-          raise Errors::EmptyParameterError.new(param.name)
+      def handle_constraints(param, incoming_value)
+        param.data[:constraints].each do |key, value|
+          case key
+          when :gt
+            raise Errors::ConstraintParameterError.new(param.name) if incoming_value < value
+          when :lt
+            raise Errors::ConstraintParameterError.new(param.name) if incoming_value > value
+          end
         end
       end
     end
@@ -57,20 +66,20 @@ module ValidifyMe
     end
 
     class ParameterDefinition
-      attr_reader :name, :constraints
+      attr_reader :name, :data
 
-      def initialize(name, constraints)
+      def initialize(name, data)
         @name = name
-        @constraints = constraints
+        @data = data
       end
 
       def value(type, **options)
-        constraints[:type] = type
-        constraints.merge!(options)
+        data[:type] = type
+        data.merge!(constraints: options)
       end
 
       def required?
-        @constraints[:required]
+        @data[:required]
       end
 
       def optional?

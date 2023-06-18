@@ -36,6 +36,7 @@ RSpec.describe ValidifyMe::DataValidator do
   
     context 'when wrong value for parameter is passed' do
       it 'should raise ConstraintParameterError' do
+        expect { person.validate(age: -2) }.to raise_error(ValidifyMe::Errors::ConstraintParameterError)
         expect { person.validate(age: 101) }.to raise_error(ValidifyMe::Errors::ConstraintParameterError)
       end
     end
