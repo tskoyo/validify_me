@@ -1,6 +1,6 @@
 module ValidifyMe
   module Errors
-    module ConstraintParameterError
+    class ConstraintParameterError < StandardError
       attr_reader :param_name
 
       def initialize(param_name)
