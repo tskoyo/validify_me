@@ -25,7 +25,7 @@ Then, run the following command to install the gem:
 
 Here's a simple example demonstrating how to use ValidifyMe for data validation and serialization:
 
-<b><i><span style="color: red">Note: This library is still in progress so some data might not be accurate!</span></i></b>
+<b><i><span>Note: This library is still in progress so some data might not be accurate!</span></i></b>
 
 ```
 require 'validify_me'
