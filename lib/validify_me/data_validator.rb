@@ -1,5 +1,5 @@
-require 'validify_me/errors/empty_parameter_error'
-require 'validify_me/errors/constraint_parameter_error'
+require 'validify_me/validator/integer_validator'
+require 'validify_me/validator/string_validator'
 
 module ValidifyMe
   module DataValidator
@@ -25,22 +25,18 @@ module ValidifyMe
         self.class.validator.params.each do |param|
           next if param.optional? && !params.key?(param.name) && param.data[:constraints].empty?
 
-          handle_constraints(param, params[param.name])
-
-          raise Errors::EmptyParameterError.new(param.name)
+          handle_param_types(param, params[param.name])
         end
       end
 
       private
 
-      def handle_constraints(param, incoming_value)
-        param.data[:constraints].each do |key, value|
-          case key
-          when :gt
-            raise Errors::ConstraintParameterError.new(param.name) if incoming_value < value
-          when :lt
-            raise Errors::ConstraintParameterError.new(param.name) if incoming_value > value
-          end
+      def handle_param_types(param, param_value)
+        case param.data[:type]
+        when :integer
+          ValidifyMe::Validator::IntegerValidator.new(param, param_value).validate
+        when :string
+          ValidifyMe::Validator::StringValidator.new(param, param_value).validate
         end
       end
     end
