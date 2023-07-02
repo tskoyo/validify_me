@@ -7,10 +7,11 @@ Gem::Specification.new do |spec|
   spec.version = ValidifyMe::VERSION
   spec.authors = ['Jovan']
   spec.email = ['jovansr@protonmail.com']
+  spec.metadata['rubygems_mfa_required'] = 'true'
 
   spec.summary = 'Gem for validating and serializing data'
   spec.homepage = 'https://github.com/Ckojo/validify_me'
-  spec.required_ruby_version = '>= 2.6.0'
+  spec.required_ruby_version = '>= 3.0.2'
 
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['source_code_uri'] = 'https://github.com/Ckojo/validify_me'

@@ -4,6 +4,7 @@ require 'validify_me/errors/empty_parameter_error'
 
 module ValidifyMe
   module Validator
+    # Class responsible for validating string data types
     class StringValidator
       attr_reader :param, :attr_value
 

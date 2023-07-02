@@ -2,6 +2,7 @@
 
 module ValidifyMe
   module Errors
+    # This error is raised when a parameter does not meet expected constraints
     class ConstraintParameterError < StandardError
       attr_reader :param_name
 

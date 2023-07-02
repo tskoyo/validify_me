@@ -1,0 +1,7 @@
+# .rubocop.yml
+
+# Disable RuboCop for the spec folder
+AllCops:
+  NewCops: enable
+  Exclude:
+    - spec/**/*

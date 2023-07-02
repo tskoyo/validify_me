@@ -4,12 +4,14 @@ require 'validify_me/validator/integer_validator'
 require 'validify_me/validator/string_validator'
 
 module ValidifyMe
+  # Main module for validating the incoming data
   module DataValidator
     def self.included(base)
       base.extend(ClassMethods)
       base.include(InstanceMethods)
     end
 
+    # This module defines methods that will be called on class-level
     module ClassMethods
       def validator
         @validator ||= Validator.new
@@ -22,6 +24,7 @@ module ValidifyMe
       end
     end
 
+    # This module defines methods that will be called on instance-level
     module InstanceMethods
       def validate(params)
         self.class.validator.params.each do |param|
@@ -43,6 +46,8 @@ module ValidifyMe
       end
     end
 
+    # This class will provide a possibility to manage whether the param should be
+    # required or optional
     class Validator
       attr_reader :params
 
@@ -63,6 +68,7 @@ module ValidifyMe
       end
     end
 
+    # Helps us determine what is the parameter definition
     class ParameterDefinition
       attr_reader :name, :data
 
