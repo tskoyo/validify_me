@@ -7,7 +7,7 @@ module ValidifyMe
   module Validator
     # Class responsible for validating integer data types
     class IntegerValidator
-      attr_reader :param, :attr_value
+      attr_reader :param, :value
 
       COMPARISON_OPERATORS = {
         gt: :>,
@@ -16,18 +16,20 @@ module ValidifyMe
         lteq: :<=
       }.freeze
 
-      def initialize(param, attr_value)
+      def initialize(param, value)
         @param = param
-        @attr_value = attr_value
+        @value = value
       end
 
       def validate
-        raise Errors::EmptyParameterError, @param.name if @attr_value.nil?
+        raise Errors::EmptyParameterError, @param.name if @value.nil?
 
-        @param.data[:constraints].each do |key, value|
+        @param.data[:constraints].each do |key, constraint_value|
           operator = COMPARISON_OPERATORS[key]
 
-          raise Errors::ConstraintParameterError, param.name if operator && @attr_value.public_send(operator, value)
+          if operator && @value.public_send(operator, constraint_value)
+            raise Errors::ConstraintParameterError, param.name
+          end
         end
       end
     end
