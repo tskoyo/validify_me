@@ -3,5 +3,6 @@
 # Disable RuboCop for the spec folder
 AllCops:
   NewCops: enable
+  SuggestExtensions: false
   Exclude:
     - spec/**/*
