@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 require 'validify_me/errors/empty_parameter_error'
 
 module ValidifyMe
   module Validator
+    # Class responsible for validating string data types
     class StringValidator
       attr_reader :param, :attr_value
 
@@ -11,7 +14,7 @@ module ValidifyMe
       end
 
       def validate
-        raise Errors::EmptyParameterError.new(@param.name) if @attr_value.nil? || @attr_value.empty?
+        raise Errors::EmptyParameterError, @param.name if @attr_value.nil? || @attr_value.empty?
       end
     end
   end

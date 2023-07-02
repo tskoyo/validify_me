@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 module ValidifyMe
   module Errors
+    # This error is raised when a parameter is required but it's empty
     class EmptyParameterError < StandardError
       attr_reader :param_name
 

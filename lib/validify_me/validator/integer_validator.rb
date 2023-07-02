@@ -1,10 +1,20 @@
+# frozen_string_literal: true
+
 require 'validify_me/errors/empty_parameter_error'
 require 'validify_me/errors/constraint_parameter_error'
 
 module ValidifyMe
   module Validator
+    # Class responsible for validating integer data types
     class IntegerValidator
       attr_reader :param, :attr_value
+
+      COMPARISON_OPERATORS = {
+        gt: :>,
+        lt: :<,
+        gteq: :>=,
+        lteq: :<=
+      }.freeze
 
       def initialize(param, attr_value)
         @param = param
@@ -12,15 +22,12 @@ module ValidifyMe
       end
 
       def validate
-        raise Errors::EmptyParameterError.new(@param.name) if @attr_value.nil?
+        raise Errors::EmptyParameterError, @param.name if @attr_value.nil?
 
         @param.data[:constraints].each do |key, value|
-          case key
-          when :gt
-            raise Errors::ConstraintParameterError.new(param.name) if @attr_value < value
-          when :lt
-            raise Errors::ConstraintParameterError.new(param.name) if @attr_value > value
-          end          
+          operator = COMPARISON_OPERATORS[key]
+
+          raise Errors::ConstraintParameterError, param.name if operator && @attr_value.public_send(operator, value)
         end
       end
     end
