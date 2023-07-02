@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'validify_me/validator/integer_validator'
 require 'validify_me/validator/string_validator'
 

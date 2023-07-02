@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ValidifyMe
   module Errors
     class ConstraintParameterError < StandardError

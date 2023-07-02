@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'validify_me/errors/empty_parameter_error'
 require 'validify_me/errors/constraint_parameter_error'
 
@@ -12,15 +14,19 @@ module ValidifyMe
       end
 
       def validate
-        raise Errors::EmptyParameterError.new(@param.name) if @attr_value.nil?
+        raise Errors::EmptyParameterError, @param.name if @attr_value.nil?
 
         @param.data[:constraints].each do |key, value|
           case key
           when :gt
-            raise Errors::ConstraintParameterError.new(param.name) if @attr_value < value
+            raise Errors::ConstraintParameterError, param.name if @attr_value < value
           when :lt
-            raise Errors::ConstraintParameterError.new(param.name) if @attr_value > value
-          end          
+            raise Errors::ConstraintParameterError, param.name if @attr_value > value
+          when :gteq
+            raise Errors::ConstraintParameterError, param.name if @attr_value <= value
+          when :lteq
+            raise Errors::ConstraintParameterError, param.name if @attr_value >= value
+          end
         end
       end
     end
