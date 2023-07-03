@@ -5,11 +5,11 @@ ValidifyMe is a Ruby library that combines validation and serialization function
 ## Features
 
 - <b>Validation</b>: Perform data validation using customizable rules and constraints. Ensure data integrity and enforce validation rules with ease. <br>
-- <b>Serialization</b>: Serialize data into various formats, such as JSON, XML, or YAML. 
+- <b>Serialization</b>: Serialize data into JSON format (for now).
 Convert Ruby objects into a structured representation for storage or communication purposes.
 - <b>Flexible Configuration</b>: Customize validation rules and serialization options to suit your specific requirements.
 - <b>Easy Integration</b>: Seamlessly integrate ValidifyMe into your existing Ruby projects with minimal code changes.
-- <b>Extensible and Composable</b>: Take advantage of the modular architecture to add your own custom validators and serializers.
+- <b>Extensible and Composable</b>: Take advantage to add your own custom validators and serializers.
 
 ## Installation
 
