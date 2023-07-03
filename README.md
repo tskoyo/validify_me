@@ -30,7 +30,7 @@ Here's a simple example demonstrating how to use ValidifyMe for data validation 
 ```
 require 'validify_me'
 
-class Person
+class User
   include ValidifyMe::Serializer
 
   attr_accessor :name, :age
@@ -38,7 +38,7 @@ class Person
   serialize_as :json
 end
 
-class ShowPerson
+class ShowUser
   include ValidifyMe::DataValidator
 
   params do
