@@ -13,7 +13,8 @@ module ValidifyMe
         gt: :>,
         lt: :<,
         gteq: :>=,
-        lteq: :<=
+        lteq: :<=,
+        eq: :==
       }.freeze
 
       def initialize(param, value)

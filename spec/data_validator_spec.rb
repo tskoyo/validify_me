@@ -18,6 +18,7 @@ RSpec.describe ValidifyMe::DataValidator do
       Person.params do
         optional(:name).value(:string)
         required(:age).value(:integer, gt: 0, lt: 100)
+        required(:level).value(:integer, eq: 5)
       end
     end
 
@@ -40,6 +41,7 @@ RSpec.describe ValidifyMe::DataValidator do
       it 'should raise ConstraintParameterError' do
         expect { person.validate(age: -2) }.to raise_error(ValidifyMe::Errors::ConstraintParameterError)
         expect { person.validate(age: 101) }.to raise_error(ValidifyMe::Errors::ConstraintParameterError)
+        expect { person.validate(age: 18, level: 6) }.to raise_error(ValidifyMe::Errors::ConstraintParameterError)
       end
     end
   end
