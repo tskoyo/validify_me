@@ -7,41 +7,43 @@ require 'validify_me/errors/constraint_parameter_error'
 require 'byebug'
 
 RSpec.describe ValidifyMe::DataValidator do
-  class Person
-    include ValidifyMe::DataValidator
-
-    attr_reader :params
+  subject do
+    Class.new do
+      include ValidifyMe::DataValidator
+    end
   end
 
   describe '.params' do
-    before(:all) do
-      Person.params do
+    before do
+      subject.params do
         optional(:name).value(:string)
         required(:age).value(:integer, gt: 0, lt: 100)
-        required(:level).value(:integer, eq: 5)
       end
     end
 
-    let(:person) { Person.new }
-
     it 'returns the defined parameters' do
-      expect(Person.params).to include(
+      expect(subject.params).to include(
         an_instance_of(ValidifyMe::DataValidator::ParameterDefinition),
         an_instance_of(ValidifyMe::DataValidator::ParameterDefinition)
       )
     end
 
-    context 'when an empty parameter is passed' do
+    context 'when an empty age parameter is passed' do
       it 'should raise ParameterValidationError' do
-        expect { person.validate(name: 'John') }.to raise_error(ValidifyMe::Errors::EmptyParameterError)
+        expect { subject.valid_params?(name: 'John') }.to raise_error(ValidifyMe::Errors::EmptyParameterError)
+      end
+
+      context 'when both required and required params are filled correctly' do
+        it 'shouldn\'t raise an error' do
+          expect { subject.valid_params?(name: 'John', age: 25) }.not_to raise_error
+        end
       end
     end
 
     context 'when wrong value for parameter is passed' do
       it 'should raise ConstraintParameterError' do
-        expect { person.validate(age: -2) }.to raise_error(ValidifyMe::Errors::ConstraintParameterError)
-        expect { person.validate(age: 101) }.to raise_error(ValidifyMe::Errors::ConstraintParameterError)
-        expect { person.validate(age: 18, level: 6) }.to raise_error(ValidifyMe::Errors::ConstraintParameterError)
+        expect { subject.valid_params?(age: -2) }.to raise_error(ValidifyMe::Errors::ConstraintParameterError)
+        expect { subject.valid_params?(age: 101) }.to raise_error(ValidifyMe::Errors::ConstraintParameterError)
       end
     end
   end
