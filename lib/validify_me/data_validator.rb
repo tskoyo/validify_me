@@ -8,7 +8,7 @@ module ValidifyMe
   module DataValidator
     def self.included(base)
       base.extend(ClassMethods)
-      base.include(InstanceMethods)
+      # base.include(InstanceMethods)
     end
 
     # This module defines methods that will be called on class-level
@@ -22,12 +22,9 @@ module ValidifyMe
 
         validator.params
       end
-    end
 
-    # This module defines methods that will be called on instance-level
-    module InstanceMethods
-      def validate(params)
-        self.class.validator.params.each do |param|
+      def valid_params?(params)
+        validator.params.each do |param|
           next if param.optional? && !params.key?(param.name) && param.data[:constraints].empty?
 
           handle_param_types(param, params[param.name])
@@ -45,6 +42,28 @@ module ValidifyMe
         end
       end
     end
+
+    # This module defines methods that will be called on instance-level
+    # module InstanceMethods
+    #   def validate(params)
+    #     self.class.validator.params.each do |param|
+    #       next if param.optional? && !params.key?(param.name) && param.data[:constraints].empty?
+
+    #       handle_param_types(param, params[param.name])
+    #     end
+    #   end
+
+    #   private
+
+    #   def handle_param_types(param, param_value)
+    #     case param.data[:type]
+    #     when :integer
+    #       ValidifyMe::Validator::IntegerValidator.new(param, param_value).validate
+    #     when :string
+    #       ValidifyMe::Validator::StringValidator.new(param, param_value).validate
+    #     end
+    #   end
+    # end
 
     # This class will provide a possibility to manage whether the param should be
     # required or optional

@@ -28,7 +28,7 @@ module ValidifyMe
         @param.data[:constraints].each do |key, constraint_value|
           operator = COMPARISON_OPERATORS[key]
 
-          if operator && @value.public_send(operator, constraint_value)
+          if operator && !@value.public_send(operator, constraint_value)
             raise Errors::ConstraintParameterError, param.name
           end
         end
