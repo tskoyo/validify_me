@@ -1,6 +1,7 @@
 # .rubocop.yml
 
-# Disable RuboCop for the spec folder
+Metrics/AbcSize:
+  Enabled: false
 AllCops:
   NewCops: enable
   SuggestExtensions: false

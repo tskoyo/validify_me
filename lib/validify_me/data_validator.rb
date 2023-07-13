@@ -27,15 +27,10 @@ module ValidifyMe
         validator.params.each do |param|
           next if param.optional? && !params.key?(param.name) && param.data[:constraints].empty?
 
-          handle_param_type(param, params[param.name])
+          validator_class_name = "ValidifyMe::Validator::#{param.data[:type].to_s.capitalize}Validator"
+
+          Object.const_get(validator_class_name).new(param, params[param.name]).validate
         end
-      end
-
-      private
-
-      def handle_param_type(param, param_value)
-        validator_class_name = "ValidifyMe::Validator::#{param.data[:type].to_s.capitalize}Validator"
-        Object.const_get(validator_class_name).new(param, param_value).validate
       end
     end
 
