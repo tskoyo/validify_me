@@ -11,6 +11,5 @@ group :development, :test do
   gem 'rspec'
   gem 'rubocop', require: false
 
-  # Basic Pry Setup
-  gem 'byebug', '~> 11.1', '>= 11.1.3'
+  gem 'pry'
 end
