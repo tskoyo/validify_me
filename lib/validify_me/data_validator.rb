@@ -68,6 +68,8 @@ module ValidifyMe
       def value(type, **options)
         @data[:type] = type
         @data.merge!(constraints: options)
+
+        self
       end
 
       def required?

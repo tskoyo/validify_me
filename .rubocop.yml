@@ -2,6 +2,10 @@
 
 Metrics/AbcSize:
   Enabled: false
+Style/IfUnlessModifier:
+  Enabled: false
+Layout/LineLength:
+  Max: 140
 AllCops:
   NewCops: enable
   SuggestExtensions: false
