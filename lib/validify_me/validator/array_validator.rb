@@ -31,6 +31,7 @@ module ValidifyMe
         return unless constraints
 
         validate_each_value_constraint(constraints[:each]) if constraints[:each]
+        validate_max_size_constraint(constraints[:max_size]) if constraints[:max_size]
         validate_min_size_constraint(constraints[:min_size]) if constraints[:min_size]
       end
 
@@ -40,6 +41,12 @@ module ValidifyMe
         each_value_constraint = TYPES[each_value_constraint]
         param_value.each do |value|
           raise Errors::ConstraintParameterError, @param_definition.name unless value.is_a?(each_value_constraint)
+        end
+      end
+
+      def validate_max_size_constraint(max_size)
+        param_value.each do |value|
+          raise Errors::ConstraintParameterError, @param_definition.name if value > max_size
         end
       end
 
