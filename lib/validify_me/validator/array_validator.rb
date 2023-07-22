@@ -16,7 +16,8 @@ module ValidifyMe
       end
 
       def validate
-        raise Errors::WrongDataTypeError.new(param_name, param_value, Array) unless param_value.is_a?(Array)
+        raise Errors::WrongDataTypeError.new(@param_name, @param_value, Array) unless @param_value.is_a?(Array)
+        raise Errors::EmptyParameterError, @param_name if @param_value.empty?
       end
     end
   end
