@@ -35,7 +35,9 @@ RSpec.describe ValidifyMe::Validator::ArrayValidator do
   end
 
   context 'correct data type is provided' do
-    let(:param_value) { [2512, 2561, 2109, 4921, 4212 ]}
+    let(:param_value) do
+      Array.new(15000000) { rand(1000..5000) }
+    end
 
     it 'shouldn\'t raise any error' do
       expect { subject.validate }.not_to raise_error

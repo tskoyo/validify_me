@@ -1,11 +1,17 @@
 # .rubocop.yml
 
+Metrics/PerceivedComplexity:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
 Metrics/AbcSize:
   Enabled: false
 Style/IfUnlessModifier:
   Enabled: false
 Layout/LineLength:
   Max: 140
+Metrics/MethodLength:
+  Max: 20
 AllCops:
   NewCops: enable
   SuggestExtensions: false

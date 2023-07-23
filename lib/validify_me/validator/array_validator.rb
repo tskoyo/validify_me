@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require 'validify_me/errors/empty_parameter_error'
-require 'validify_me/errors/constraint_parameter_error'
-require 'validify_me/errors/wrong_data_type_error'
-
 module ValidifyMe
   module Validator
     # Class responsible for validating array data types
@@ -31,29 +27,42 @@ module ValidifyMe
         return unless constraints
 
         validate_each_value_constraint(constraints[:each]) if constraints[:each]
-        validate_max_size_constraint(constraints[:max_size]) if constraints[:max_size]
-        validate_min_size_constraint(constraints[:min_size]) if constraints[:min_size]
+        validate_size_constraints(constraints[:min_size], constraints[:max_size])
       end
 
       private
 
       def validate_each_value_constraint(each_value_constraint)
         each_value_constraint = TYPES[each_value_constraint]
-        param_value.each do |value|
-          raise Errors::ConstraintParameterError, @param_definition.name unless value.is_a?(each_value_constraint)
+
+        invalid_values = []
+        @param_value.each_slice(1000) do |slice|
+          invalid_values.concat(slice.reject { |value| value.is_a?(each_value_constraint) })
         end
+
+        raise Errors::ConstraintParameterError, @param_definition.name if invalid_values.any?
       end
 
-      def validate_max_size_constraint(max_size)
-        param_value.each do |value|
-          raise Errors::ConstraintParameterError, @param_definition.name if value > max_size
-        end
-      end
+      def validate_size_constraints(min_size, max_size)
+        errors = []
 
-      def validate_min_size_constraint(min_size)
-        param_value.each do |value|
-          raise Errors::ConstraintParameterError, @param_definition.name if value < min_size
+        if min_size
+          invalid_values = []
+          @param_value.each_slice(1000) do |slice|
+            invalid_values.concat(slice.reject { |value| value >= min_size })
+          end
+          errors.concat(invalid_values.map { @param_definition.name }) if invalid_values.any?
         end
+
+        if max_size
+          invalid_values = []
+          @param_value.each_slice(1000) do |slice|
+            invalid_values.concat(slice.reject { |value| value <= max_size })
+          end
+          errors.concat(invalid_values.map { @param_definition.name }) if invalid_values.any?
+        end
+
+        raise Errors::ConstraintParameterError, errors.join(', ') if errors.any?
       end
     end
   end
