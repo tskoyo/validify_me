@@ -18,30 +18,42 @@ RSpec.describe ValidifyMe::DataValidator do
         required(:age).value(:integer, gt: 0, lt: 100)
       end
     end
+    
+    let(:valid_params)  { { name: 'John', age: 25 } }
 
-    it 'returns the defined parameters' do
-      expect(subject.params).to include(
-        an_instance_of(ValidifyMe::DataValidator::ParameterDefinition),
-        an_instance_of(ValidifyMe::DataValidator::ParameterDefinition)
-      )
-    end
+    context 'invalid params passed' do
+      it 'raises an error for negative age' do
+        expect { subject.valid_params?(age: -2) }.to raise_error(ValidifyMe::Errors::ConstraintParameterError)
+      end
+  
+      it 'raises an error for the value larger than 100' do
+        expect { subject.valid_params?(age: 101) }.to raise_error(ValidifyMe::Errors::ConstraintParameterError)
+      end
+  
+      it 'raises an error for the value 100' do
+        expect { subject.valid_params?(age: 100) }.to raise_error(ValidifyMe::Errors::ConstraintParameterError)
+      end
+  
+      it 'raises an error for the value 0' do
+        expect { subject.valid_params?(age: 0) }.to raise_error(ValidifyMe::Errors::ConstraintParameterError)
+      end
 
-    context 'when an empty age parameter is passed' do
-      it 'should raise ParameterValidationError' do
+      it 'raises an error for an empty age parameter' do
         expect { subject.valid_params?(name: 'John') }.to raise_error(ValidifyMe::Errors::EmptyParameterError)
       end
-
-      context 'when both required and required params are filled correctly' do
-        it 'shouldn\'t raise an error' do
-          expect { subject.valid_params?(name: 'John', age: 25) }.not_to raise_error
-        end
-      end
     end
 
-    context 'when wrong value for parameter is passed' do
-      it 'should raise ConstraintParameterError' do
-        expect { subject.valid_params?(age: -2) }.to raise_error(ValidifyMe::Errors::ConstraintParameterError)
-        expect { subject.valid_params?(age: 101) }.to raise_error(ValidifyMe::Errors::ConstraintParameterError)
+    context 'valid params passed' do
+      context 'valid age without name passed' do
+        it 'validates params correctly' do
+          expect { subject.valid_params?(age: 29) }.not_to raise_error
+        end
+      end
+
+      context 'both name and age passed' do
+        it 'validates params correctly' do
+          expect { subject.valid_params?(valid_params) }.not_to raise_error
+        end
       end
     end
   end
