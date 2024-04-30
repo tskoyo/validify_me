@@ -11,5 +11,8 @@ group :development, :test do
   gem 'rspec'
   gem 'rubocop', require: false
 
+  gem 'dry-monads', '~> 1.6'
+  gem 'dry-matcher', '~> 1.0'
+
   gem 'pry'
 end
